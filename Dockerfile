@@ -23,7 +23,7 @@ ENV PATH=$PATH:/root/go/bin
 ENV GOPATH=/root/go
 
 # Install Foundry
-RUN foundryup
+RUN /root/go/bin/foundryup
 
 # Clone the Polaris repository
 RUN git clone https://github.com/berachain/polaris
