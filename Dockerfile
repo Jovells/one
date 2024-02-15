@@ -5,11 +5,11 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get upgrade -y
 
 # Install necessary packages
-RUN apt-get install -y git make screen jq curl wget
+RUN apt-get install -y git make jq curl wget
 
 # Download and install Go
-RUN wget https://golang.org/dl/go1.21.4.linux-amd64.tar.gz
-RUN tar -C /usr/local -xzf go1.21.4.linux-amd64.tar.gz
+RUN wget https://golang.org/dl/go1.21.6.linux-amd64.tar.gz
+RUN tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
 ENV PATH=$PATH:/usr/local/go/bin
 
 # Verify Go installation
@@ -26,6 +26,9 @@ ENV GOPATH=/root/go
 RUN git clone https://github.com/berachain/polaris
 WORKDIR /polaris
 RUN git checkout main
+
+# Install additional dependencies
+RUN make dependencies
 
 # Build and start the Polaris node
 CMD ["make", "start"]
