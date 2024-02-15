@@ -15,15 +15,18 @@ ENV PATH=$PATH:/usr/local/go/bin
 # Verify Go installation
 RUN go version
 
-# Download and execute Foundry script
-RUN curl -L https://foundry.paradigm.xyz | bash
+# Download Foundry installation script
+RUN wget https://foundry.paradigm.xyz -O foundry_install.sh
+
+# Make the script executable
+RUN chmod +x foundry_install.sh
+
+# Run the Foundry installation script
+RUN ./foundry_install.sh
 
 # Set environment variables for Foundry
 ENV PATH=$PATH:/root/go/bin
 ENV GOPATH=/root/go
-
-# Install Foundry
-RUN /root/go/bin/foundryup
 
 # Clone the Polaris repository
 RUN git clone https://github.com/berachain/polaris
