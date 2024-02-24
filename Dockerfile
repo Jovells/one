@@ -1,34 +1,16 @@
-# Use a base image with Ubuntu
+# Use a base image
 FROM ubuntu:latest
 
-# Update and upgrade packages
-RUN apt-get update && apt-get upgrade -y
+# Install dependencies
+RUN apt-get update -y && apt-get -y install curl tar ca-certificates
 
-# Install necessary packages
-RUN apt-get install -y git make jq curl wget
+# Download and install the application
+WORKDIR /app
+RUN curl -o apphub-linux-amd64.tar.gz https://assets.coreservice.io/public/package/60/app-market-gaga-pro/1.0.4/app-market-gaga-pro-1_0_4.tar.gz \
+    && tar -zxf apphub-linux-amd64.tar.gz \
+    && rm -f apphub-linux-amd64.tar.gz \
+    && cd ./apphub-linux-amd64 \
+    && ./apphub service install
 
-# Download and install Go
-RUN wget https://golang.org/dl/go1.21.6.linux-amd64.tar.gz
-RUN tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
-ENV PATH=$PATH:/usr/local/go/bin
-
-# Verify Go installation
-RUN go version
-
-# Download Foundry installation script
-RUN curl -L https://foundry.paradigm.xyz | bash
-
-# Set environment variables for Foundry
-ENV PATH=$PATH:/root/go/bin
-ENV GOPATH=/root/go
-
-# Clone the Polaris repository
-RUN git clone https://github.com/berachain/polaris
-WORKDIR /polaris
-RUN git checkout main
-
-# Install additional dependencies
-RUN make dependencies
-
-# Build and start the Polaris node
-CMD ["make", "start"]
+# Start the service
+CMD ["./apphub-linux-amd64/apphub", "service", "start"]
